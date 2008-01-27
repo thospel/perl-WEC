@@ -1,0 +1,6 @@
+Revision history for Perl extension WEC.
+
+0.01  Sat May 15 22:48:16 2004
+	- original version; created by h2xs 1.23 with options
+		-X -n WEC
+
