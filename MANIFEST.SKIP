@@ -5,6 +5,8 @@
 ,v$
 \B\.svn\b
 \b_darcs\b
+^_MTN$
+^\.mtn-ignore$
 
 # Avoid Makemaker generated and utility files.
 \bMANIFEST\.bak
