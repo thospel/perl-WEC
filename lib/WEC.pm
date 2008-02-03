@@ -32,7 +32,7 @@ our @EXPORT_OK = (@IMPORT, qw(DELETE_BUG kernel_type api));
 
 our $kernel_type;
 
-our $VERSION = '0.01';
+our $VERSION = '1.000';
 our $API     = 1;
 
 our @wec_preferred = qw(POE Event Tk Glib);

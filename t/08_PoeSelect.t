@@ -1,6 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl d/08_PoeSelect.t'
-
+# `make test'. After `make install' it should work as `perl 08_PoeSelect.t'
 use warnings;
 use strict;
 

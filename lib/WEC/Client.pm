@@ -6,7 +6,7 @@ use Carp;
 
 use WEC::Socket qw(start_connect);
 
-our $VERSION = "0.01";
+our $VERSION = "1.000";
 our @CARP_NOT	= qw(WEC::Socket WEC::FieldConnection WEC::Connection);
 
 use base qw(WEC::Object);

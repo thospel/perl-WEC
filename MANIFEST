@@ -31,3 +31,4 @@ t/10_PoeEvent.t
 t/11_PoeTk.t
 t/TestKernel.pm
 META.yml                                 Module meta-data (added by MakeMaker)
+md5-versions

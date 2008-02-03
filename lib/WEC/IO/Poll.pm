@@ -8,7 +8,7 @@ use Carp;
 use IO::Poll;
 
 use vars qw(@ISA $VERSION @EXPORT_OK);
-$VERSION = "0.01";
+$VERSION = "1.000";
 use WEC::Kernel qw(unloop add_alarm delete_alarm run_now
                    add_signal delete_signal alive_signal auto_unloop
                    add_work delete_work add_idle delete_idle run_idle

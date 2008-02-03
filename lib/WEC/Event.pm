@@ -7,7 +7,7 @@ use Carp;
 use Event qw(loop unloop PRIO_NORMAL);
 
 use vars qw(@ISA $VERSION @EXPORT_OK);
-$VERSION = "0.01";
+$VERSION = "1.000";
 use WEC::Kernel qw(CODE PREVIOUS NEXT run_work auto_unloop
                    $work $alive_signal);
 @ISA = qw(WEC::Kernel);

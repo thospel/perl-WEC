@@ -5,7 +5,7 @@ use Carp;
 use Scalar::Util qw(weaken);
 use WEC qw(api=1);
 
-our $VERSION = "0.01";
+our $VERSION = "1.000";
 
 use AutoLoader qw(AUTOLOAD);
 

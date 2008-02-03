@@ -11,7 +11,7 @@ use WEC::Kernel qw(unloop CODE PREVIOUS NEXT run_work add_signal delete_signal
                    @immediate $signal_rd $alive_signal %old_SIG
                    $work $idle @loops);
 use vars qw($VERSION @ISA @EXPORT_OK);
-$VERSION = "0.01";
+$VERSION = "1.000";
 @ISA = qw(WEC::Kernel);
 @EXPORT_OK = qw($event_window destroy auto_unloop
                 add_read add_write delete_read delete_write

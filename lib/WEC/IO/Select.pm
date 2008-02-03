@@ -13,7 +13,7 @@ use WEC::Kernel qw(add_alarm delete_alarm unloop run_now
                    @loops @alarms @immediate $now $work $idle $signal_rd
                    $alive_signal);
 use vars qw($VERSION @ISA @EXPORT_OK);
-$VERSION = "0.01";
+$VERSION = "1.000";
 @ISA = qw(WEC::Kernel);
 @EXPORT_OK = qw(add_read add_write delete_read delete_write
                 add_alarm delete_alarm add_work delete_work auto_unloop

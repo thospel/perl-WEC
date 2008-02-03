@@ -11,7 +11,7 @@ use Errno qw(EINPROGRESS ENOTCONN ECONNRESET EINTR EWOULDBLOCK EAGAIN EINVAL);
 use WEC qw(api=1 DELETE_BUG);
 use WEC::Socket qw(blocking);
 
-our $VERSION = "0.01";
+our $VERSION = "1.000";
 our @EXPORT_OK = qw(CLIENT SERVER HEADER BODY CALLBACK COMMAND ARG PARENT hex_show);
 
 use base qw(WEC::Object);

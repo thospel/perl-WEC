@@ -10,7 +10,7 @@ use Socket qw(TCP_NODELAY SOCK_STREAM PF_UNIX PF_INET PF_UNSPEC SOL_SOCKET
 use POSIX  qw(tmpnam _exit F_GETFL F_SETFL O_NONBLOCK  FD_CLOEXEC);
 use Errno  qw(ECONNREFUSED EADDRINUSE EINTR);
 
-our $VERSION = "0.01";
+our $VERSION = "1.000";
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw($default_listen $default_bind_attempts

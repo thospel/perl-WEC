@@ -13,7 +13,7 @@ use Config qw();
 
 $SIG{PIPE} = "IGNORE";
 
-our $VERSION = "0.01";
+our $VERSION = "1.000";
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(add_alarm delete_alarm unloop run_now add_work

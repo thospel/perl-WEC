@@ -29,7 +29,7 @@ our $poe_type = $poe_type[0];
 Event->import if $poe_type eq "Event";
 
 use vars qw($VERSION @ISA @EXPORT_OK);
-$VERSION = "0.01";
+$VERSION = "1.000";
 use WEC::Kernel qw(CODE PREVIOUS NEXT delete_work run_work run_idle
                    add_signal delete_signal forget_signals auto_unloop
                    @immediate @loops $work $idle %signals $alive_signal);

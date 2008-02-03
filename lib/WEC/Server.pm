@@ -7,7 +7,7 @@ use Carp;
 use WEC qw(api=1);
 use WEC::Socket qw(blocking listener);
 
-our $VERSION = "0.01";
+our $VERSION = "1.000";
 
 use base qw(WEC::Object);
 

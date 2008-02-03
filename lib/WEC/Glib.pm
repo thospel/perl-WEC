@@ -6,7 +6,7 @@ use warnings;
 use Glib;
 use Carp;
 
-our $VERSION = "0.01";
+our $VERSION = "1.000";
 
 use WEC::Kernel qw(CODE PREVIOUS NEXT
                    add_signal delete_signal
