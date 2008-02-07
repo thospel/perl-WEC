@@ -427,7 +427,8 @@ sub signal_maps {
 	for my $i (0..$#nrs) {
 	    my $name = $names[$i];
 	    my $nr   = $nrs[$i];
-	    $signal2string{$nr} = $name;
+            # "normal" names tend to be in front, e.g. SIGCHLD before SIGCLD
+	    $signal2string{$nr} ||= $name;
 	    $signal2number{$nr} = $signal2number{$name} = $nr;
 	}
     }
