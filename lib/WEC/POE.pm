@@ -11,9 +11,9 @@ BEGIN {$^W = our $old_w}
 use POE::Kernel;
 use Carp;
 
-$POE::VERSION =~ /^\d+\.(\d+)(?:_(\d+))?$/ ||
+$POE::VERSION =~ /^(\d+)\.(\d+)(?:_(\d+))?$/ ||
     die "Could not parse POE version $POE::VERSION";
-croak "POE version 0.29_01 or higher required--this is only version $POE::VERSION" if $1 < 29 || $1 == 29 && (!$2 || $2 < 1);
+croak "POE version 0.29_01 or higher required--this is only version $POE::VERSION" if $1 == 0 && ($2 < 29 || $2 == 29 && (!$3 || $3 < 1));
 
 my %map_type = ("Poll" => "IO_Poll");
 my %bad_type = map {$_ => 1} qw(PerlSignals TkCommon TkActiveState);
