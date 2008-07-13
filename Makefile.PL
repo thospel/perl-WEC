@@ -14,7 +14,8 @@ WriteMakefile
          "Test::More"		=> 0.11,	# For the tests only
      },
      ($] >= 5.005 ?	## Add these new keywords supported since 5.005
-      (AUTHOR	=> 'Ton Hospel <WEC@ton.iguana.be>') : ()),
+      (AUTHOR	=> 'Ton Hospel <WEC@ton.iguana.be>',
+       LICENSE		=> 'perl') : ()),
      $^O eq "MSWin32" ? (
          PM_FILTER	=> '$(PERL) -p -e1',
      ) : (),
