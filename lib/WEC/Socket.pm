@@ -127,7 +127,7 @@ sub inet {
 
 sub listener {
     my ($target, %params) = @_;
-    my ($scheme, $where, $options) = $target =~ m!^(\w+)://([^?]*)(.*)!s or
+    my ($scheme, $where, $options) = $target =~ m{^(\w+)://([^?]*)(.*)}s or
         croak "Listener '$target' is not of the form scheme://target";
     if ($options ne "") {
         croak "Listener doesn't accept options (yet)";
@@ -255,7 +255,7 @@ sub clo_exec(*$) {
 
 sub start_connect {
     my $target = shift;
-    my ($scheme, $where, $options) = $target =~ m!^(\w+)://([^?]+)(.*)!s or
+    my ($scheme, $where, $options) = $target =~ m{^(\w+)://([^?]+)(.*)}s or
         croak "Connection target '$target' is not of the form scheme://target";
     if ($options ne "") {
         croak "Start_connect doesn't accept options (yet)";
