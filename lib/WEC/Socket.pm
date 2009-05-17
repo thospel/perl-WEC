@@ -7,7 +7,7 @@ use Socket qw(TCP_NODELAY SOCK_STREAM PF_UNIX PF_INET PF_UNSPEC SOL_SOCKET
               SO_REUSEADDR SO_REUSEPORT INADDR_ANY IPPROTO_TCP
               pack_sockaddr_un pack_sockaddr_in unpack_sockaddr_in
               inet_ntoa inet_aton);
-use POSIX  qw(tmpnam _exit F_GETFL F_SETFL O_NONBLOCK  FD_CLOEXEC);
+use POSIX  qw(tmpnam _exit F_GETFL F_SETFL O_NONBLOCK FD_CLOEXEC);
 use Errno  qw(ECONNREFUSED EADDRINUSE EINTR);
 
 our $VERSION = "1.000";
@@ -24,11 +24,13 @@ sub unix {
     my %params = @_;
 
     my $p = delete $params{Path};
+    my $auto_clean = delete $params{AutoClean};
     my $abstract = delete $params{Abstract} ? "\x00" : "";
     my $pumask = delete $params{PathUmask};
     my $bind_attempts = defined($p) && $p ne "" ? 1 :
         delete $params{BindAttempts} || $default_bind_attempts;
     my $listen = delete $params{Listen};
+    my $blocking = exists $params{Blocking} ? delete $params{Blocking} : 1;
     my $clo_exec = exists $params{CloExec} ? delete $params{CloExec} : 1;
 
     croak("Unknown options ", join(", ", keys %params)) if %params;
@@ -57,16 +59,26 @@ sub unix {
                 $! != EADDRINUSE || $_ == $bind_attempts;
             $path = $abstract . tmpnam();
         }
-        unless (listen($listener, $listen)) {
-            my $rc = $!;
-            $abstract || unlink($path) || croak "Could not unlink '$path' ($!) after listen returned $rc";
-            croak "Could not listen on socket: $rc";
+        eval {
+            blocking($listener, 0) if !$blocking;
+            listen($listener, $listen) || 
+                croak "Could not listen on socket: $!";
+        };
+        if ($@) {
+            $abstract || unlink($path) || 
+                croak "Could not unlink '$path' ($!) after $@";
+            die $@;
         }
     };
     umask($oldmask) if defined($pumask);
     die $@ if $@;
+    if ($auto_clean && !$abstract) {
+        my $p = $path;
+        bless ${*$listener}{auto_clean} = \$p, "FTP::Proxy::Utils::AutoClean";
+    }
     return $listener unless wantarray;
-    $path =~ s/([\s%?])/sprintf "%%%02X", $1/eg;
+    # Added / to the characters that don't get escaped
+    $path =~ s{([^A-Za-z0-9_.!~*()\'/-])}{sprintf "%%%02X", $1}eg;
     return $listener, "unix://$path";
 }
 
@@ -87,6 +99,7 @@ sub inet {
     } else {
         $port = delete($params{LocalPort}) || 0;
     }
+    my $blocking = exists $params{Blocking} ? delete $params{Blocking} : 1;
     my $clo_exec = exists $params{CloExec} ? delete $params{CloExec} : 1;
 
     croak("Unknown options ", join(", ", keys %params)) if %params;
@@ -119,6 +132,7 @@ sub inet {
             croak "Could not getsockname: $!";
         ($port, $laddress) = unpack_sockaddr_in($laddr);
     }
+    blocking($listener, 0) if !$blocking;
     listen($listener, $listen) || croak "Could not listen on bound socket: $!";
     # No uri-escaping is needed since the string won't contain anything unsafe
     return wantarray ? ($listener, "tcp://".inet_ntoa($laddress) . ":$port") :
@@ -254,7 +268,7 @@ sub clo_exec(*$) {
 }
 
 sub start_connect {
-    my $target = shift;
+    my ($target, %params) = @_;
     my ($scheme, $where, $options) = $target =~ m{^(\w+)://([^?]+)(.*)}s or
         croak "Connection target '$target' is not of the form scheme://target";
     if ($options ne "") {
@@ -262,11 +276,15 @@ sub start_connect {
         # Add option parsing here
     }
     $where =~ s/%([0-9A-Fa-f]{2})/chr hex $1/eg;
+
+    my $blocking = delete $params{Blocking};
+    my $buffered = delete $params{Buffered};
+    croak("Unknown options ", join(", ", keys %params)) if %params;
+
     my ($peer, $to);
     if ($scheme eq "unix") {
         socket($peer, PF_UNIX, SOCK_STREAM, PF_UNSPEC) ||
             croak "Could not open UNIX socket: $!";
-        binmode($peer);
         $to = pack_sockaddr_un($where) || croak "Could not pack '$where'";
     } elsif ($scheme eq "tcp") {
         socket($peer, PF_INET, SOCK_STREAM, IPPROTO_TCP) ||
@@ -279,20 +297,25 @@ sub start_connect {
     } else {
         croak "unknown scheme '$scheme'";
     }
-    blocking($peer, 0);
+    binmode($peer);
+    blocking($peer, 0) if !$blocking;
+    if (!$buffered) {
+        my $fh = select($peer);
+        $| = 1;
+        select($fh);
+    }
     $! = 0 if connect($peer, $to);
     return wantarray ? ($peer, $!) : $peer;
 }
 
-# Using this doesn't make any sense if you OS supports 
-# socketpar(..AF_INET, SOCK_STREAM..)
+# Using this doesn't make any sense if your OS supports
+# socketpair(..AF_INET, SOCK_STREAM..)
 sub self_inet {
     for my $n (1..10) {
 	# no strict "refs";
 	my ($lsocket, $laddress) = listener("tcp://127.0.0.1");
 	my ($lport) = $laddress =~ /:(\d+)\z/ or
 	    croak "No port in listening address $laddress";
-	binmode($lsocket);
 	blocking($lsocket, 0);
 
         socket($_[0], PF_INET, SOCK_STREAM, IPPROTO_TCP) ||
@@ -364,8 +387,8 @@ WEC::Socket - Networking helper functions for WEC
  $clo_exec = clo_exec($handle);
  clo_exec($handle, $clo_exec);
 
- $socket = start_connect($address);
- ($socket, $errno) = start_connect($address);
+ $socket = start_connect($address, %options);
+ ($socket, $errno) = start_connect($address, %options);
 
  $pid = spawn($socket, $program, @args)
 
@@ -397,6 +420,15 @@ L<POSIX::tmpnam|POSIX/"tmpnam">.
 If given a true argument, the unix socket will be abstract, meaning it won't
 appear in the normal filesystem.
 
+=item X<unix_AutoClean>AutoClean => $boolean
+
+If given a true argument the listening unix socket will be automatically 
+removed when the listening socket is closed. This however depends on the 
+destructor method getting to run, so if for example the program is killed hard
+enough or the socket becomes part of a circular datastructure the cleanup action
+will not happen. Consider using abstract sockets (on operating systems that
+support them) for guaranteed cleanup.
+
 =item X<unix_PathUmask>PathUmask => $umask
 
 If given, the socket will be created using the given $umask.
@@ -419,10 +451,16 @@ Defaults to 10.
 
 =item X<unix_Listen>Listen => $queue_size
 
-The value that will be used as QUEUSIZE for the L<listen|perlfunc/"listen">
+The value that will be used as QUEUESIZE for the L<listen|perlfunc/"listen">
 call on the created socket.
 
 Defaults to 5.
+
+=item X<unix_Blocking>Blocking => $boolean
+
+If set to true the socket will be blocking, otherwise it will be non-blocking.
+
+The default is true.
 
 =back
 
@@ -484,10 +522,16 @@ L<exec|perlfunc/exec>. It will get closed in the execed program otherwise.
 
 =item X<inet_Listen>Listen => $queue_size
 
-The value that will be used as QUEUSIZE for the L<listen|perlfunc/"listen">
+The value that will be used as QUEUESIZE for the L<listen|perlfunc/"listen">
 call on the created socket.
 
 Defaults to 5.
+
+=item X<inet_Blocking>Blocking => $boolean
+
+If set to true the socket will be blocking, otherwise it will be non-blocking.
+
+The default is true.
 
 =back
 
@@ -581,7 +625,7 @@ false otherwise.
 Sets the given $handle to close across L<exec|perlfunc/exec> if $clo_exec is
 true, makes it not closing across L<exec|perlfunc/exec> otherwise.
 
-=item X<start_connect>$socket = start_connect($address)
+=item X<start_connect>$socket = start_connect($address, %options)
 
 Creates a new non-blocking socket of the type implied by $address and then
 initiates a connection attempt to address. Returns the new socket while you
@@ -612,7 +656,29 @@ The connection attempt failed and L<$!|perlvar/"$!"> actually gives the reason.
 
 =back
 
-=item ($socket, $errno) = start_connect($address)
+%options is a list of tag/value pairs. Tags can be:
+
+=over
+
+=item X<start_connect_Blocking>Blocking => $boolean
+
+If given a true value the connect will be blocking and the function will wait
+until the connect either succeeded or failed. This can take a long time and
+should therefore usually not be used in an event driven program.
+
+Defaults to false.
+
+=item X<start_connect_Buffered>Buffered => $boolean
+
+Buffered I/O on this socket will be autoflushed if this option is false.
+Otherwise output will only be flushed when the internal buffer reaches a given
+size.
+
+The default is false which is usually what is wanted for sockets.
+
+=back
+
+=item ($socket, $errno) = start_connect($address, %options)
 
 Same as the scalar context version, but also returns the L<$!|perlvar/"$!">
 error code in $errno.
