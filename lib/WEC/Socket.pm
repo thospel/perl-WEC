@@ -627,9 +627,10 @@ true, makes it not closing across L<exec|perlfunc/exec> otherwise.
 
 =item X<start_connect>$socket = start_connect($address, %options)
 
-Creates a new non-blocking socket of the type implied by $address and then
-initiates a connection attempt to address. Returns the new socket while you
-can check the L<connect|perlfunc/"connect"> returncode in L<$!|perlvar/"$!">.
+Creates a new socket of the type implied by $address and then initiates a
+connection attempt to address. Returns the new socket while you can check the
+
+L<connect|perlfunc/"connect"> returncode in L<$!|perlvar/"$!">.
 
 A returncode might be:
 
