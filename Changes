@@ -1,6 +1,6 @@
 Revision history for Perl extension WEC.
 
-1.000	2009-05-17 12:31:03 UT
+1.000	2009-05-26 12:52:17 UT
 	- Proper parsing of POE version
 	- Add a blocking and buffered option for start_connect
 	- Somewhat better URI escaping of socket ids
