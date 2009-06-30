@@ -284,11 +284,11 @@ sub start_connect {
     my ($peer, $to);
     if ($scheme eq "unix") {
         socket($peer, PF_UNIX, SOCK_STREAM, PF_UNSPEC) ||
-            croak "Could not open UNIX socket: $!";
+            croak "Could not create UNIX socket: $!";
         $to = pack_sockaddr_un($where) || croak "Could not pack '$where'";
     } elsif ($scheme eq "tcp") {
         socket($peer, PF_INET, SOCK_STREAM, IPPROTO_TCP) ||
-            croak "Could not open INET socket: $!";
+            croak "Could not create INET socket: $!";
         my ($address, $port) = $where =~ /^(.+):(\d+)$/s or
             croak "Could not parse target '$where' as address:port";
         my $addr = inet_aton($address) || croak "Could not resolve '$address'";
