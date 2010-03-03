@@ -36,7 +36,7 @@ EOF
 
 $postamble{ppd} = <<'EOF';
 $(DISTNAME).ppd: all ppd
-	makeppd.pl "--perl=$(PERL)" --min_version=1.014 "--zip=$(ZIP)" "--tar=$(TAR)" "--compress=$(COMPRESS)" --leave=ppm "--objects=$(OBJECT)" $(DISTNAME).ppd $(VERSION)
+	makeppd.pl "--perl=$(PERLRUN)" --min_version=1.014 "--zip=$(ZIP)" "--tar=$(TAR)" "--compress=$(COMPRESS)" --leave=ppm "--objects=$(OBJECT)" $(DISTNAME).ppd $(VERSION)
 EOF
 
 $postamble{cover} = <<'EOF';
@@ -57,6 +57,7 @@ ppm_uninstall:
 	ppm uninstall $(DISTNAME)
 EOF
 
+BEGIN { undef &postamble }
 sub postamble {
     return shift->SUPER::postamble() . join("
 ", @postamble{sort {uc $a cmp uc $b || $a cmp $b } keys %postamble});
