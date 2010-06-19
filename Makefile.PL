@@ -9,7 +9,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile
     (NAME	=> 'WEC',
      VERSION	=> '0.01',
-     PREREQ_PM	=> { 
+     PREREQ_PM	=> {
          "Exporter::Tidy"	=> 0.05,
          "Test::More"		=> 0.11,	# For the tests only
      },
@@ -32,7 +32,7 @@ use vars qw(%postamble);
 
 $postamble{ppm} = <<'EOF';
 ppm: $(DISTNAME).ppd
-	makeppd.pl "--perl=$(PERLRUN)" --min_version=1.014 "--zip=$(ZIP)" "--tar=$(TAR)" "--compress=$(COMPRESS)" --leave=ppm "--objects=$(OBJECT)" $(DISTNAME).ppd $(VERSION)
+	makeppd.pl "--perl=$(PERLRUN)" --min_version=1.015 "--zip=$(ZIP)" "--tar=$(TAR)" "--compress=$(COMPRESS)" --leave=ppm "--objects=$(OBJECT)" $(DISTNAME).ppd $(VERSION)
 EOF
 
 $postamble{ppd} = <<'EOF';

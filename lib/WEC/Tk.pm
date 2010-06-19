@@ -123,7 +123,7 @@ sub destroy {
 sub loop {
     # Extra test without alarm handling makes alarm priority normal
     (@immediate && run_signals),
-    DoOneEvent(DONT_WAIT | FILE_EVENTS | WINDOW_EVENTS) while 
+    DoOneEvent(DONT_WAIT | FILE_EVENTS | WINDOW_EVENTS) while
         (@immediate && run_signals), !@loops && DoOneEvent;
     # @immediate && run_signals while !@loops && DoOneEvent;
     return shift @loops;

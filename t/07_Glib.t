@@ -9,7 +9,7 @@ unless (eval { require Glib }) {
         exit;
 }
 plan 'no_plan';
-            
+
 is($WEC::kernel_type, undef, 'No event class set');
 use_ok('WEC');
 is($WEC::kernel_type, 'WEC::Glib', 'Event class set to WEC::Glib');

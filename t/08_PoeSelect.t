@@ -11,7 +11,7 @@ unless (eval { require POE }) {
         exit;
 }
 plan 'no_plan';
-            
+
 is($WEC::kernel_type, undef, 'No event class set');
 use_ok('WEC');
 ok($WEC::kernel_type	eq 'WEC::POE' &&

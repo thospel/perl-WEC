@@ -61,11 +61,11 @@ sub unix {
         }
         eval {
             blocking($listener, 0) if !$blocking;
-            listen($listener, $listen) || 
+            listen($listener, $listen) ||
                 croak "Could not listen on socket: $!";
         };
         if ($@) {
-            $abstract || unlink($path) || 
+            $abstract || unlink($path) ||
                 croak "Could not unlink '$path' ($!) after $@";
             die $@;
         }
@@ -422,8 +422,8 @@ appear in the normal filesystem.
 
 =item X<unix_AutoClean>AutoClean => $boolean
 
-If given a true argument the listening unix socket will be automatically 
-removed when the listening socket is closed. This however depends on the 
+If given a true argument the listening unix socket will be automatically
+removed when the listening socket is closed. This however depends on the
 destructor method getting to run, so if for example the program is killed hard
 enough or the socket becomes part of a circular datastructure the cleanup action
 will not happen. Consider using abstract sockets (on operating systems that

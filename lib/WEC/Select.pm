@@ -7,15 +7,15 @@ use warnings;
 use POSIX qw(EINTR);
 use Carp;
 
-use WEC::Kernel qw(unloop add_alarm delete_alarm run_now 
+use WEC::Kernel qw(unloop add_alarm delete_alarm run_now
                    add_work delete_work add_idle delete_idle run_idle
                    add_signal delete_signal alive_signal auto_unloop
-                   @loops @alarms @immediate $now $work $idle 
+                   @loops @alarms @immediate $now $work $idle
                    $signal_rd $alive_signal);
 use vars qw($VERSION @ISA @EXPORT_OK);
 $VERSION = "1.000";
 @ISA = qw(WEC::Kernel);
-@EXPORT_OK = qw(add_read add_write delete_read delete_write 
+@EXPORT_OK = qw(add_read add_write delete_read delete_write
                 add_alarm delete_alarm add_work delete_work auto_unloop
                 add_idle delete_idle add_signal delete_signal alive_signal
                 loop unloop init readable writable);
@@ -71,8 +71,8 @@ sub loop {
             run_now();
             return shift @loops if @loops;
         }
-        (select(my $r = $read_mask, my $w = $write_mask, undef, 
-                $work || $idle ? 0 : 
+        (select(my $r = $read_mask, my $w = $write_mask, undef,
+                $work || $idle ? 0 :
                 @alarms > 1 ? $alarms[1][0]-$now > 0 ? $alarms[1][0]-$now : 0 :
                 %write_refs || keys %read_refs > 1 || %WEC::Kernel::check_signals ? undef : last) ||
          ($idle && !$work && (@alarms <= 1 || $alarms[1][0] > $now) && run_idle, next)) >=0 or $! == EINTR() ? next : die "Select failed: $! (", $!+0, ")";

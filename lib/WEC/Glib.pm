@@ -121,7 +121,7 @@ sub init {
     $WEC::Kernel::del_sig ||= \&WEC::Kernel::unset_old_signal;
     if (!$loop) {
         $loop = Glib::MainLoop->new;
-        Glib->install_exception_handler(sub { 
+        Glib->install_exception_handler(sub {
             push @dies, shift;
             $loop->quit;
             return 1;

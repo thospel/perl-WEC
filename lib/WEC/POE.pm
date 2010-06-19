@@ -18,9 +18,9 @@ croak "POE version 0.29_01 or higher required--this is only version $POE::VERSIO
 my %map_type = ("Poll" => "IO_Poll");
 my %bad_type = map {$_ => 1} qw(PerlSignals TkCommon TkActiveState);
 my @poe_type = map(m!^POE[/\\](?:XS[/\\])?Loop[/\\](.+)\.pm\z! && !$bad_type{$1} ? $map_type{$1} || $1 : (), keys %INC);
-die "Could not determine POE event loop from qw(@poe_type)" if 
-    @poe_type != 1 && 
-    # Next is typical for the case you ask for IO::Poll and 
+die "Could not determine POE event loop from qw(@poe_type)" if
+    @poe_type != 1 &&
+    # Next is typical for the case you ask for IO::Poll and
     # POE falls back to IO::Select anyways
     !(@poe_type == 2 && $poe_type[0] eq "Select" && $poe_type[1] eq "IO_Poll");
 our $poe_type = $poe_type[0];
@@ -53,9 +53,9 @@ sub add_read($*$) {
     defined(my $fd = fileno($_[1])) || croak "Not a filehandle";
     croak "Descriptor $fd already selected for read" if $read_refs{$fd};
     $read_refs{$fd} = $_[2];
-    $in_poe ? 
+    $in_poe ?
         $poe_kernel->select_read($_[1], "readable") :
-        $poe_kernel->call($session || croak("Not inited"), 
+        $poe_kernel->call($session || croak("Not inited"),
                           add => $select_read, $_[1], "readable");
 }
 
@@ -63,9 +63,9 @@ sub add_write($*$) {
     defined(my $fd = fileno($_[1])) || croak "Not a filehandle";
     croak "Descriptor $fd already selected for write" if $write_refs{$fd};
     $write_refs{$fd} = $_[2];
-    $in_poe ? 
+    $in_poe ?
         $poe_kernel->select_write($_[1], "writable") :
-        $poe_kernel->call($session || croak("Not inited"), 
+        $poe_kernel->call($session || croak("Not inited"),
                           add => $select_write, $_[1],"writable");
 }
 
@@ -75,7 +75,7 @@ sub delete_read($*) {
         delete $read_refs{$fd};
     $in_poe ?
         $poe_kernel->select_read($_[1]) :
-        $poe_kernel->call($session || croak("Not inited"), 
+        $poe_kernel->call($session || croak("Not inited"),
                           add => $select_read, $_[1]);
 }
 
@@ -83,16 +83,16 @@ sub delete_write($*) {
     defined(my $fd = fileno($_[1])) || croak "Not a filehandle";
     croak "Descriptor $fd wasn't selected for write " unless
         delete $write_refs{$fd};
-    $in_poe ? 
+    $in_poe ?
         $poe_kernel->select_write($_[1]) :
-        $poe_kernel->call($session || croak("Not inited"), 
+        $poe_kernel->call($session || croak("Not inited"),
                           add => $select_write, $_[1]);
 }
 
 sub add_alarm {
     return $in_poe ?
         $poe_kernel->delay_set(alarm => $_[1], $_[2]) :
-        $poe_kernel->call($session || croak("Not inited"), 
+        $poe_kernel->call($session || croak("Not inited"),
                           add	=> $delay_set,
                           alarm => $_[1], $_[2]);
 }
@@ -100,7 +100,7 @@ sub add_alarm {
 sub delete_alarm {
     $in_poe ?
         $poe_kernel->alarm_remove($_[1]) :
-        $poe_kernel->call($session || croak("Not inited"), 
+        $poe_kernel->call($session || croak("Not inited"),
                           add => $alarm_remove, $_[1]);
 }
 
@@ -109,9 +109,9 @@ sub add_work {
     shift;
     return $work = $work->[NEXT] = $work->[NEXT][PREVIOUS] =
         [$work, $work->[NEXT], shift] if $work;
-    $work_token ||= ($in_poe ? 
-                     $poe_kernel->yield("work") : 
-                     $poe_kernel->post($session || croak("Not inited"), "work"), 
+    $work_token ||= ($in_poe ?
+                     $poe_kernel->yield("work") :
+                     $poe_kernel->post($session || croak("Not inited"), "work"),
                      1);
     return $work->[PREVIOUS] = $work->[NEXT] = $work = [undef, undef, shift];
 }
@@ -138,16 +138,16 @@ sub delete_idle {
 sub set_signal {
     !$alive_signal || defined($poe_kernel->refcount_increment($session_id, "s")) || die "Could not inc session: $!";
     ++$sig_count;
-    $in_poe ? 
+    $in_poe ?
         $poe_kernel->sig(shift, "signal") :
-        $poe_kernel->call($session || croak("Not inited"), 
+        $poe_kernel->call($session || croak("Not inited"),
                           add => $sig, shift, "signal");
 }
 
 sub unset_signal {
     $in_poe ?
         $poe_kernel->sig(shift) :
-        $poe_kernel->call($session || croak("Not inited"), 
+        $poe_kernel->call($session || croak("Not inited"),
                           add => $sig, shift);
     !$alive_signal || defined($poe_kernel->refcount_decrement($session_id, "s")) || die "Could not dec session: $!";
     --$sig_count;

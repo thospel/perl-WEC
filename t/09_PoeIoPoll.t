@@ -12,7 +12,7 @@ unless (eval { require POE }) {
         exit;
 }
 plan 'no_plan';
-            
+
 is($WEC::kernel_type, undef, 'No event class set');
 use_ok('WEC');
 if ($WEC::POE::poe_type	eq 'IO_Poll' &&

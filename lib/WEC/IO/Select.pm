@@ -67,11 +67,11 @@ sub loop {
         }
         $! = EINTR;
         my ($r, $w) = IO::Select::select
-            ($reads, $writes, undef, 
-             $work || $idle ? 0 : @alarms > 1 ? 
-             $alarms[1][0]-$now > 0 ? $alarms[1][0]-$now : 0 : 
+            ($reads, $writes, undef,
+             $work || $idle ? 0 : @alarms > 1 ?
+             $alarms[1][0]-$now > 0 ? $alarms[1][0]-$now : 0 :
              %write_refs || keys %read_refs > 1 || %WEC::Kernel::check_signals ? undef : last
-             ) or 
+             ) or
              $! == EINTR() ? ($idle && !$work && (@alarms <= 1 || $alarms[1][0] > $now) && run_idle, next) : die "Select failed: $!";
         ($read_refs{ $_} || next)->() for @$r;
         ($write_refs{$_} || next)->() for @$w;

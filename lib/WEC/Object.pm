@@ -94,7 +94,7 @@ sub stop_all_events {
         my @events = values %{$object->{events}};
         %{$object->{events}} = ();
         # Leaves only COMMAND (maybe should only undef CALLBACK ?)
-        $#$_ = 0 for @events;	
+        $#$_ = 0 for @events;
     }
 }
 

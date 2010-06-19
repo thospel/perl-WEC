@@ -145,7 +145,7 @@ WEC stands for C<Wrapped Event Class>. It's a wrapper for event driven kernels
 (like L<Event|Event>, L<Tk|Tk> and L<POE|POE>), or it can provide a default
 pure perl event driver if you are not using a seperate one to wrap.
 
-The sort of interface provided is comparable to that of L<Event|Event>, but 
+The sort of interface provided is comparable to that of L<Event|Event>, but
 actually more primitive. So if you need a fast sophisticated pure event kernel,
 by all means use L<Event|Event>.
 
@@ -157,7 +157,7 @@ functionality, have a look at L<POE|POE>.
 
 The target public for this module is people who want to write event driven
 objects without yet committing to a specific event kernel and people who need
-a pure perl event kernel. Both these jobs can actually also be done by 
+a pure perl event kernel. Both these jobs can actually also be done by
 L<POE|POE>, but this module is much more lightweight and puts less restrictions
 on your programming model.
 
@@ -184,19 +184,19 @@ The following kernels have wrappers in the standard WEC distribution:
 
 =item Select
 
-This is the default pure perl event kernel based an plain 
+This is the default pure perl event kernel based an plain
 L<select|perlfunc/"select">. Quite fast and light.
 
 =item IO::Select
 
 Another pure perl kernel, this time using L<IO::Select|IO::Select>.
-There is no real advantage to using this over L<Select|"Select">, it's 
+There is no real advantage to using this over L<Select|"Select">, it's
 mainly meant as a demo for how to wrap kernels. Medium in speed.
 
 =item IO::Poll
 
 Another pure perl kernel, this time using L<IO::Poll|IO::Poll>.
-There is no real advantage to using this over L<Select|"Select">, it's 
+There is no real advantage to using this over L<Select|"Select">, it's
 mainly meant as a demo for how to wrap kernels. Medium in speed.
 
 =item Event
@@ -206,7 +206,7 @@ but depends on an external module that isn't pure perl.
 
 =item Tk
 
-A kernel based on L<Tk|Tk>, useful for making GUI programs. 
+A kernel based on L<Tk|Tk>, useful for making GUI programs.
 Also reasonably fast.
 
 =item Glib
@@ -223,15 +223,15 @@ It's currently rather slow though.
 
 =back
 
-You can force WEC to use any of these by mentioning the name in the import 
+You can force WEC to use any of these by mentioning the name in the import
 list. E.g. to run a L<Tk> based WEC, you would use:
 
     use WEC qw(api=1 Tk)
 
-If you don't pass an explicit kerneltype, WEC will choose one for itself at 
-import time by looking at the modules already loaded, and then choosing one 
-based on that. The order of preference is L<POE|"POE">, L<Tk|"Tk"> and then 
-L<Event|"Event">. If none of these is loaded, it will fall back to 
+If you don't pass an explicit kerneltype, WEC will choose one for itself at
+import time by looking at the modules already loaded, and then choosing one
+based on that. The order of preference is L<POE|"POE">, L<Tk|"Tk"> and then
+L<Event|"Event">. If none of these is loaded, it will fall back to
 L<Select|"Select">.
 
 So the following two are roughly equivalent:
@@ -251,8 +251,8 @@ and:
 
 Some event kernels need some preparation before they can set up event
 callbacks. This function does the needed preparation. The method is guaranteed
-idempotent, so multiple calls will behave just like one. For example 
-L<WEC::POE|WEC::POE> uses it to set up a L<POE::Session|POE::Session>, 
+idempotent, so multiple calls will behave just like one. For example
+L<WEC::POE|WEC::POE> uses it to set up a L<POE::Session|POE::Session>,
 while L<WEC::Tk|WEC::Tk> uses it to set up a a L<MainWindow|Tk::MainWindow>.
 
 Some kernels need a new init if after leaving L<the event loop|"loop"> you
@@ -434,7 +434,7 @@ Removes the signal callback represented by $signal_id (which must be the
 result of an earlier L<add_signal|"add_signal">). It's ok to call this method
 multiple times. The extras will simply be ignored. When the last handler for
 a given $signal is removed, L<$SIG{$signal}|perlvar/"%SIG"> will be restored
-(except in L<POE|POE> based kernels where all signal handling is always under 
+(except in L<POE|POE> based kernels where all signal handling is always under
 L<POE|POE> control).
 
 =item X<loop>$result = loop()

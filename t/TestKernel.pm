@@ -21,7 +21,7 @@ can_ok("WEC",
           add_work delete_work add_idle delete_idle add_signal delete_signal
           alive_signal loop unloop auto_unloop init readable writable api));
 WEC->import(qw(loop unloop readable writable alive_signal auto_unloop api));
-can_ok(__PACKAGE__, qw(loop unloop readable writable alive_signal 
+can_ok(__PACKAGE__, qw(loop unloop readable writable alive_signal
                        auto_unloop api));
 if (__PACKAGE__->can("prepare_loop")) {
     no warnings "redefine";
@@ -98,7 +98,7 @@ sub Pipe(**) {
 sub self_alarm_kill {
     if ($^O eq 'MSWin32') {
 	alarm(1)
-    } else {    
+    } else {
 	kill "ALRM", $$;
     }
 }
@@ -415,7 +415,7 @@ is($hit, 1, "Arg ignored");
 is(loop(), "yyy", "Right returncode from loop");
 is($hit, 4, "Executed 3 times");
 
-# Have idleprocedures and a readability generator. 
+# Have idleprocedures and a readability generator.
 # The readability should livelock the idles
 $hit = 0;
 ok(Pipe(local *RD, local *WR), "Create pipe");
@@ -495,7 +495,7 @@ for (0..$workers-1) {
 check_fd();
 
 SKIP: {
-    skip("$WEC::kernel_type cannot easily generate signals to itself", 
+    skip("$WEC::kernel_type cannot easily generate signals to itself",
 	 8+2*$workers) if $^O eq 'MSWin32';
     # Basic adding, running and deleteing of a signal handler
     ok(Pipe(\*RD, \*WR), "Create pipe");
@@ -511,7 +511,7 @@ SKIP: {
 	}
     }, canary);
     is($hit, 1, "Arg ignored");
-    WEC->add_read(\*RD, sub { 
+    WEC->add_read(\*RD, sub {
 	$hit++;
 	fail("Should never be readable");
     });
@@ -522,7 +522,7 @@ SKIP: {
     close \*WR;
     check_fd();
 
-    # Have a signalhandler and a readability generator. 
+    # Have a signalhandler and a readability generator.
     # Signal handler may livelock readability, but not the other way round
     $hit = 0;
     ok(Pipe(local *RD, local *WR), "Create pipe");
@@ -562,7 +562,7 @@ SKIP: {
 
     ok(alive_signal(), "Signal keep the loop alive by default");
 
-    # Check if signals indeed keep the loop alive. 
+    # Check if signals indeed keep the loop alive.
     # Also check signalhandling while the underlying loop is active
     $hit = 0;
     WEC->init;
@@ -579,7 +579,7 @@ SKIP: {
 
     $old = eval { alive_signal(0) };
   SKIP: {
-      if ($WEC::kernel_type eq "WEC::Tk" || $WEC::kernel_type eq "WEC::Glib" || 
+      if ($WEC::kernel_type eq "WEC::Tk" || $WEC::kernel_type eq "WEC::Glib" ||
 	  $WEC::kernel_type eq "WEC::Event") {
 	  ok($@, "Cannot change alive_signal");
 	  ok(alive_signal(), "And the old value is indeed unchanged");
@@ -589,7 +589,7 @@ SKIP: {
       ok($old, "Returned old alive state");
       is(alive_signal(), 0, "And the old value is indeed changed");
 
-      # Check if signals indeed don't keep the loop alive. 
+      # Check if signals indeed don't keep the loop alive.
       my $wid;
       $hit = 0;
       WEC->init;
@@ -659,7 +659,7 @@ check_fd();
 use_ok("WEC::Socket");
 can_ok("WEC::Socket",
        qw(unix inet listener is_tcp spawn blocking start_connect));
-WEC::Socket->import(qw(unix inet listener spawn blocking is_tcp 
+WEC::Socket->import(qw(unix inet listener spawn blocking is_tcp
                        start_connect));
 check_fd();
 

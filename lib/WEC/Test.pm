@@ -9,7 +9,7 @@ use WEC::Socket qw(unix inet);
 use Test::More (import => []);
 
 use Exporter::Tidy
-    default => [qw(loop warn_loop plain_loop unloop delta check_fd 
+    default => [qw(loop warn_loop plain_loop unloop delta check_fd
                    check_objects make_socket make_pair
                    write_test write_tests
                    $trace_line $hit $client $server $socket_type
@@ -71,7 +71,7 @@ my $object_line		= __LINE__;
             };
             *plain_loop = \&WEC::loop;
         }
-        $trace_line   = delete $options{TraceLine} if 
+        $trace_line   = delete $options{TraceLine} if
             exists $options{TraceLine};
         $client_paths = delete $options{ClientPaths} if
             exists $options{ClientPaths};
@@ -150,7 +150,7 @@ sub make_pair {
     WEC->init;
     make_socket;
     $client = "${class}::Client"->new
-        ($no_dest ? () : (Destination => $destination), 
+        ($no_dest ? () : (Destination => $destination),
          $socket_type eq "Unix" && $client_paths ? (Paths =>$destination) : (),
          @{$client_opts||[]});
     $server = "${class}::Server"->new
@@ -203,7 +203,7 @@ use Test::More;
             }
             $type =~ s/\b([a-z])/\u$1/;
             $string .= "plan 'no_plan';
-            
+
 is(\$WEC::kernel_type, undef, 'No event class set');
 ";
             if ($type =~ /POE/) {
