@@ -35,6 +35,16 @@ ppm: $(DISTNAME).ppd
 	makeppd.pl "--perl=$(PERLRUN)" --min_version=1.015 "--zip=$(ZIP)" "--tar=$(TAR)" "--compress=$(COMPRESS)" --leave=ppm "--objects=$(OBJECT)" $(DISTNAME).ppd $(VERSION)
 EOF
 
+$postamble{ppm3} = <<'EOF';
+ppm3: $(DISTNAME).ppd
+	makeppd.pl "--perl=$(PERLRUN)" --min_version=1.015 "--zip=$(ZIP)" "--tar=$(TAR)" "--compress=$(COMPRESS)" --ppm_version=3 --leave=ppm3 "--objects=$(OBJECT)" $(DISTNAME).ppd $(VERSION)
+EOF
+
+$postamble{ppm4} = <<'EOF';
+ppm4: $(DISTNAME).ppd
+	makeppd.pl "--perl=$(PERLRUN)" --min_version=1.015 "--zip=$(ZIP)" "--tar=$(TAR)" "--compress=$(COMPRESS)" --ppm_version=4 --leave=ppm4 "--objects=$(OBJECT)" $(DISTNAME).ppd $(VERSION)
+EOF
+
 $postamble{ppd} = <<'EOF';
 $(DISTNAME).ppd: all ppd
 EOF
