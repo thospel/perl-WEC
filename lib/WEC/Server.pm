@@ -154,7 +154,7 @@ sub DESTROY {
         next if $path !~ s!\Aunix://!!i;
         $path =~ s/\?.*//s;
         $path =~ s/%([0-9A-Fa-f]{2})/chr hex $1/eg;
-        unlink($path) || die "Could not unlink $path: $!";
+        unlink($path) || die "Could not unlink '$path': $!";
     }
     $server->SUPER::DESTROY;
 }

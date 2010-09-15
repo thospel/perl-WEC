@@ -172,7 +172,7 @@ sub write_test {
     $poe_type =~ s/^POE:://;
     my $new = "$file.new.$$";
     {
-        open(my $fh, ">", $new) || die "Could not create $new: $!";
+        open(my $fh, ">", $new) || die "Could not create '$new': $!";
         local $\;
         eval {
             my $string = "# Before `make install' is performed this script should be runnable with
@@ -236,12 +236,12 @@ $string .= "sub prepare_loop {
             $string .= "use_ok('t::TestKernel')\n";
             $string =~ s/use Test::More;\s*plan\s+(.*)/use Test::More $1/g;
             print $fh $string or die "Error writing to $new: $!";
-            close($fh) || die "Error closing $new: $!";
-            rename($new, $file) || die "Could not rename $new to $file: $!";
+            close($fh) || die "Error closing '$new': $!";
+            rename($new, $file) || die "Could not rename '$new' to '$file': $!";
         };
     }
     if ($@) {
-        unlink($new) || die "Could not unlink $new: $! after $@";
+        unlink($new) || die "Could not unlink '$new': $! after $@";
         die $@;
     }
 }
