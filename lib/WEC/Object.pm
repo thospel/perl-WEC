@@ -1,6 +1,6 @@
 package WEC::Object;
-use warnings;
 use strict;
+use warnings;
 use Carp;
 use Scalar::Util qw(weaken);
 use WEC qw(api=1);

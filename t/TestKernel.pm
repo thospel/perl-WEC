@@ -1,6 +1,6 @@
 use 5.008_001;
-use warnings;
 use strict;
+use warnings;
 use Socket qw(IPPROTO_TCP);
 use Time::HiRes qw(time);
 

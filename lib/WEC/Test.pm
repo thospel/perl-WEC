@@ -1,6 +1,6 @@
 package WEC::Test;
-use warnings;
 use strict;
+use warnings;
 use Carp;
 
 use Time::HiRes qw(time);
@@ -178,8 +178,8 @@ sub write_test {
             my $string = "# Before `make install' is performed this script should be runnable with
 # `make test'. After `make install' it should work as `perl $file'
 
-use warnings;
 use strict;
+use warnings;
 
 use Test::More;
 ";
