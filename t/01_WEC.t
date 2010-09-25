@@ -2,6 +2,7 @@
 # `make test'. After `make install' it should work as `perl 01_WEC.t'
 #########################
 
+## no critic (ProhibitUselessNoCritic ProhibitMagicNumbers)
 use strict;
 use Test::More tests => 7;
 
