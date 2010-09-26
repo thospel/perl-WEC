@@ -284,7 +284,7 @@ WEC->add_alarm(0.1, sub {
     is(++$hit, 2, "0.1 second later");
     WEC->delete_alarm($drop);
     eval { WEC->delete_alarm($drop) };
-    ok(!$@, "Can redrop dropped alarms");
+    is($@, "", "Can redrop dropped alarms");
 });
 $drop = WEC->add_alarm(0.2, sub {
     fail("Should never be reached due to drop") });
@@ -585,7 +585,7 @@ SKIP: {
 	  ok(alive_signal(), "And the old value is indeed unchanged");
 	  skip "$WEC::kernel_type cannot change alive_signal", 5;
       }
-      ok(!$@, "Can change alive_signal");
+      is($@, "", "Can change alive_signal");
       ok($old, "Returned old alive state");
       is(alive_signal(), 0, "And the old value is indeed changed");
 
