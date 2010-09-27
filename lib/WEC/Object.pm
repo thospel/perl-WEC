@@ -99,7 +99,7 @@ sub stop_all_events {
 }
 
 sub user_data {
-    return shift->{user_data} unless @_ > 1;
+    return shift->{user_data} if @_ <= 1;
     my $req = shift;
     my $old = $req->{user_data};
     $req->{user_data} = shift;
