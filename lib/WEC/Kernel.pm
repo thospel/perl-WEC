@@ -107,7 +107,7 @@ sub delete_alarm {
 }
 
 sub run_now {
-    run_signals if $got_signal;
+    run_signals() if $got_signal;
 
     ($work = $work->[NEXT])->[CODE]->() if $work;
 
@@ -392,7 +392,7 @@ sub forget_signals {
 
 sub signal_init {
     return if $old_mask;
-    signal_pipe;
+    signal_pipe();
 
     $WEC::kernel_type->add_read($signal_rd, \&read_signal_tokens);
     if ($^O eq 'MSWin32') {
