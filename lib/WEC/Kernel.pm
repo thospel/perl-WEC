@@ -20,7 +20,7 @@ our @EXPORT_OK = qw(add_alarm delete_alarm unloop run_now add_work
                     delete_work run_work run_signals add_idle delete_idle
                     run_idle add_signal delete_signal alive_signal auto_unloop
                     signal2number signal2string forget_signals
-                    TIME INDEX CODE PREVIOUS NEXT NAME
+                   TIME INDEX CODE PREVIOUS NEXT NAME
                     @loops @alarms @immediate $now $work $idle $signal_rd
                     $signal_wr %got_signal $got_signal %signals $add_sig
                     $del_sig $alive_signal %old_SIG);
@@ -103,7 +103,7 @@ sub delete_alarm {
             $i = $l;
         }
     }
-    ($alarms[$i] = pop @alarms)->[1] = $i;
+    ($alarms[$i] = pop @alarms)->[INDEX] = $i;
 }
 
 sub run_now {

@@ -7,7 +7,7 @@ use Socket qw(TCP_NODELAY SOCK_STREAM PF_UNIX PF_INET PF_UNSPEC SOL_SOCKET
               SO_REUSEADDR SO_REUSEPORT INADDR_ANY IPPROTO_TCP
               pack_sockaddr_un pack_sockaddr_in unpack_sockaddr_in
               inet_ntoa inet_aton);
-use POSIX  qw(tmpnam _exit F_GETFL F_SETFL O_NONBLOCK FD_CLOEXEC);
+use POSIX  qw(_exit F_GETFL F_SETFL O_NONBLOCK FD_CLOEXEC);
 use Errno  qw(ECONNREFUSED EADDRINUSE EINTR);
 
 our $VERSION = "1.000";
@@ -19,6 +19,14 @@ our @EXPORT_OK = qw($default_listen $default_bind_attempts
 
 our $default_listen = 5;
 our $default_bind_attempts = 10;
+
+my @letters = "a".."z";
+
+sub tmpnam {
+    my $tmp = "/tmp/Wec.$>.";
+    $tmp .= $letters[rand @letters] for 1..10;
+    return $tmp;
+}
 
 sub unix {
     my %params = @_;

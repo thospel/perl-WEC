@@ -3,9 +3,14 @@
 # Closure cleanup bugs make it need at least 5.8.1
 # Fix for bug #30027 makes it need at least 5.8.4
 use 5.008004;
+use strict;
+use warnings;
 use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
+
+our $VERSION = '1.000';
+
+settings();
+
 WriteMakefile
     (NAME	=> 'WEC',
      VERSION	=> '0.01',
@@ -23,7 +28,7 @@ WriteMakefile
          PM_FILTER	=> '$(PERL) -p -e1',
      ) : (),
      clean		=> {
-         FILES => '$(DISTNAME).ppd ppm cover_db',
+         FILES => '$(DISTNAME).ppd ppm cover_db nytprof nytprof.out* md5-versions.old',
      },
 );
 
@@ -76,7 +81,7 @@ ppm_uninstall:
 	ppm uninstall $(DISTNAME)
 EOT
 
-undef &postamble;	## no critic (ProhibitUselessNoCritic ProhibitAmpersandSigils)
+undef &postamble;	## no critic (UselessNoCritic AmpersandSigils)
 }
 {
     package MY;
@@ -85,3 +90,13 @@ undef &postamble;	## no critic (ProhibitUselessNoCritic ProhibitAmpersandSigils)
     }
 }
 # END MY
+
+sub settings {
+    package MY;
+    our %postamble;
+
+    $postamble{version_check} = <<'EOF';
+all ::
+	$(NOECHO) $(FULLPERL) version_check "$(NAME)" "$(DESTINSTALLSITELIB)" "$(VERSION)" "$(VERSION_FROM)"
+EOF
+}

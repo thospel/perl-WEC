@@ -65,13 +65,14 @@ sub delete_write($*) {
 }
 
 sub loop {
+    my ($r, $w);
     until (@loops) {
         # return if $read_mask eq "" && $write_mask eq "";
         if (@alarms > 1 || @immediate || $work) {
             run_now();
             return shift @loops if @loops;
         }
-        (select(my $r = $read_mask, my $w = $write_mask, undef,
+        (select($r = $read_mask, $w = $write_mask, undef,
                 $work || $idle ? 0 :
                 @alarms > 1 ? $alarms[1][0]-$now > 0 ? $alarms[1][0]-$now : 0 :
                 %write_refs || keys %read_refs > 1 || %WEC::Kernel::check_signals ? undef : last) ||
